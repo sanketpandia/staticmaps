@@ -1,6 +1,7 @@
-import sharp from 'sharp';
-import last from 'lodash.last';
+import sharp from "sharp";
+import last from "lodash.last";
 
+sharp.cache(false);
 export default class Image {
   constructor(options = {}) {
     this.options = options;
@@ -64,7 +65,10 @@ export default class Image {
         height: this.height,
         channels: 4,
         background: {
-          r: 0, g: 0, b: 0, alpha: 0,
+          r: 0,
+          g: 0,
+          b: 0,
+          alpha: 0,
         },
       },
     });
@@ -89,9 +93,7 @@ export default class Image {
         return { input: data, ...position };
       });
 
-    tempBuffer = await sharp(tempBuffer)
-      .composite(preparedTilesForSharp)
-      .toBuffer();
+    tempBuffer = await sharp(tempBuffer).composite(preparedTilesForSharp).toBuffer();
 
     this.image = tempBuffer;
     return true;
@@ -100,31 +102,39 @@ export default class Image {
   /**
    * Save image to file
    */
-  async save(fileName = 'output.png', outOpts = {}) {
-    const format = last(fileName.split('.'));
+  async save(fileName = "output.png", outOpts = {}) {
+    const format = last(fileName.split("."));
     const outputOptions = outOpts;
     outputOptions.quality = outputOptions.quality || this.quality;
     switch (format.toLowerCase()) {
-      case 'webp': await sharp(this.image).webp(outputOptions).toFile(fileName); break;
-      case 'jpg':
-      case 'jpeg': await sharp(this.image).jpeg(outputOptions).toFile(fileName); break;
-      case 'png':
-      default: await sharp(this.image).png(outputOptions).toFile(fileName);
+      case "webp":
+        await sharp(this.image).webp(outputOptions).toFile(fileName);
+        break;
+      case "jpg":
+      case "jpeg":
+        await sharp(this.image).jpeg(outputOptions).toFile(fileName);
+        break;
+      case "png":
+      default:
+        await sharp(this.image).png(outputOptions).toFile(fileName);
     }
   }
 
   /**
    * Return image as buffer
    */
-  async buffer(mime = 'image/png', outOpts = {}) {
+  async buffer(mime = "image/png", outOpts = {}) {
     const outputOptions = outOpts;
     outputOptions.quality = outputOptions.quality || this.quality;
     switch (mime.toLowerCase()) {
-      case 'image/webp': return sharp(this.image).webp(outputOptions).toBuffer();
-      case 'image/jpeg':
-      case 'image/jpg': return sharp(this.image).jpeg(outputOptions).toBuffer();
-      case 'image/png':
-      default: return sharp(this.image).png(outputOptions).toBuffer();
+      case "image/webp":
+        return sharp(this.image).webp(outputOptions).toBuffer();
+      case "image/jpeg":
+      case "image/jpg":
+        return sharp(this.image).jpeg(outputOptions).toBuffer();
+      case "image/png":
+      default:
+        return sharp(this.image).png(outputOptions).toBuffer();
     }
   }
 }

@@ -16,6 +16,7 @@ import Bound from './bound';
 import asyncQueue from './helper/asyncQueue';
 import geoutils from './helper/geo';
 
+sharp.cache(false);
 const LINE_RENDER_CHUNK_SIZE = 1000;
 
 class StaticMaps {
